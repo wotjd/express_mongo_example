@@ -3,7 +3,6 @@
  */
 
 import mongoose from 'mongoose';
-import book from './book';
 
 let db = mongoose.connection;
 

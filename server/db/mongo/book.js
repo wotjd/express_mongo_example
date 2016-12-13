@@ -9,7 +9,7 @@ let schema = mongoose.Schema;
 let bookSchema = new schema({
     title: String,
     author: String,
-    published_data: { type: Date, default: Date.now}
+    published_date: { type: Date, default: Date.now}
 });
 
 export default mongoose.model('book', bookSchema);
