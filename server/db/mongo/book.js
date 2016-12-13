@@ -5,7 +5,6 @@
 import mongoose from 'mongoose';
 
 let schema = mongoose.Schema;
-
 let bookSchema = new schema({
     title: String,
     author: String,

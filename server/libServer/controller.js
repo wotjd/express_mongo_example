@@ -36,7 +36,7 @@ controller.getBookByAuthor = (req, res) => {
 
 controller.createBook = (req, res) => {
     let book = new Book();
-    book.title = req.body.name;
+    book.title = req.body.title;
     book.author = req.body.author;
     book.published_date = new Date(req.body.published_date);
 
@@ -51,11 +51,52 @@ controller.createBook = (req, res) => {
 };
 
 controller.updateBook = (req, res) => {
-    res.end();
+    Book.findById(req.params.book_id, (err, book) => {
+        if(err)
+            return res.status(500).json({ error: 'database failure' });
+        if(!book)
+            return res.status(404).json({ error: 'book not found' });
+
+        if(req.body.title)
+            book.title = req.body.title;
+        if(req.body.author)
+            book.author = req.body.author;
+        if(req.body.published_date)
+            book.published_date = req.body.published_date;
+
+        book.save((err) => {
+            if(err)
+                res.status(500).json({error: 'failed to update'});
+            res.json({message: 'book updated'});
+        });
+
+    });
 };
 
+/*
+ // UPDATE THE BOOK (ALTERNATIVE)
+ app.put('/api/books/:book_id', function(req, res){
+ Book.update({ _id: req.params.book_id }, { $set: req.body }, function(err, output){
+ if(err) res.status(500).json({ error: 'database failure' });
+ console.log(output);
+ if(!output.n) return res.status(404).json({ error: 'book not found' });
+ res.json( { message: 'book updated' } );
+ })
+ });
+ */
+
 controller.deleteBook = (req, res) => {
-    res.end();
+    Book.remove({_id: req.params.book_id }, function(err){
+        if(err) return res.status(500).json({ error: "database failure" });
+
+        /* ( SINCE DELETE OPERATION IS IDEMPOTENT, NO NEED TO SPECIFY )
+         if(!output.result.n) return res.status(404).json({ error: "book not found" });
+         res.json({ message: "book deleted" });
+         // idempotent : 존재하지 않는 도큐멘트를 삭제하더라도 달라지는 것이 없다
+         */
+
+        res.status(204).end();
+    });
 };
 
 export default controller;
