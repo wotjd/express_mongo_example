@@ -4,6 +4,7 @@
 
 import express from 'express';
 import bodyParser from 'body-parser';
+import path from 'path';
 import routes from './routes'
 
 let libServer = {
@@ -22,9 +23,14 @@ let libServer = {
         });
     },
     routes: (app) => {
+        app.get('/about', (req, res) => {
+            res.sendFile(path.resolve(__dirname, './../../public/index.html'));
+        });
+        /*
         app.get('/about', function(req, res){
             res.send('This is express example');
         });
+        */
         app.use('/', routes);
     }
 };
